@@ -8,7 +8,7 @@ public class CarController : MonoBehaviour
 
     private float currentSpeed = 0f;
 
-    // Audio
+   
     public AudioSource engineAudio;
 
     void Update()
@@ -16,7 +16,7 @@ public class CarController : MonoBehaviour
         float moveInput = Input.GetAxis("Vertical");
         float turn = Input.GetAxis("Horizontal");
 
-        // Acceleratie
+        
         if (moveInput > 0)
         {
             currentSpeed += acceleration * Time.deltaTime;
@@ -32,12 +32,12 @@ public class CarController : MonoBehaviour
 
         currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed / 2, maxSpeed);
 
-        // Miscare masina
+      
         transform.Translate(0, 0, currentSpeed * Time.deltaTime);
         transform.Rotate(0, turn * turnSpeed * Time.deltaTime, 0);
 
-        // Control sunet motor
-        if (Mathf.Abs(currentSpeed) > 0.1f) // daca masina se misca
+       
+        if (Mathf.Abs(currentSpeed) > 0.1f) 
         {
             if (!engineAudio.isPlaying)
                 engineAudio.Play();
@@ -48,7 +48,7 @@ public class CarController : MonoBehaviour
                 engineAudio.Pause();
         }
 
-        // Optional: poti ajusta volumul/pitch in functie de viteza
-        engineAudio.pitch = 0.5f + Mathf.Abs(currentSpeed) / maxSpeed; // mai rapid = sunet mai inalt
+    
+        engineAudio.pitch = 0.5f + Mathf.Abs(currentSpeed) / maxSpeed;
     }
 }
