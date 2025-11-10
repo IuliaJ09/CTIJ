@@ -68,4 +68,18 @@ public class Timer : MonoBehaviour
             GameOver();
         }
     }
+    public void SubtractTime(float amount)
+    {
+        timer = Mathf.Max(0, timer - amount);
+        StartCoroutine(ShowTimeReducedMessage(amount));
+    }
+
+    private System.Collections.IEnumerator ShowTimeReducedMessage(float amount)
+    {
+        string oldMessage = messageText.text;
+        messageText.text = $"-{amount:F1}s!";
+        yield return new WaitForSeconds(1.5f);
+        messageText.text = oldMessage;
+    }
+
 }
