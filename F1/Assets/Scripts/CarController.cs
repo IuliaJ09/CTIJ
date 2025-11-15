@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CarController : MonoBehaviour
 {
@@ -6,28 +7,31 @@ public class CarController : MonoBehaviour
     public float acceleration = 5f;
     public float turnSpeed = 50f;
 
-    private float currentSpeed = 0f;
+    public float currentSpeed = 0f;
+    public float driftFactor = 1f;
 
-   
     public AudioSource engineAudio;
 
     void Update()
     {
         float moveInput = Input.GetAxis("Vertical");
         float turn = Input.GetAxis("Horizontal");
+        float dt = Time.deltaTime / Time.timeScale;
+        if (!FirstButton.instance.gameStarted)
+            return;
 
-        
+
         if (moveInput > 0)
         {
-            currentSpeed += acceleration * Time.deltaTime;
+            currentSpeed += acceleration * dt;
         }
         else if (moveInput < 0)
         {
-            currentSpeed -= acceleration * Time.deltaTime;
+            currentSpeed -= acceleration * dt;
         }
         else
         {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, 0, acceleration * Time.deltaTime);
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0, acceleration * dt);
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed / 2, maxSpeed);
@@ -51,4 +55,4 @@ public class CarController : MonoBehaviour
     
         engineAudio.pitch = 0.5f + Mathf.Abs(currentSpeed) / maxSpeed;
     }
-}
+  }

@@ -28,11 +28,21 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        if (!FirstButton.instance.gameStarted)
+            return;
+
         if (isRunning && !gameEnded)
         {
             timer += Time.deltaTime;
             timerText.text = timer.ToString("F2") + "s";
         }
+    }
+    public void StartRace()
+    {
+            timer = 0f;
+            isRunning = true;
+            gameEnded = false;
+            messageText.text = "";
     }
     public void GameOver()
     {
@@ -43,7 +53,7 @@ public class Timer : MonoBehaviour
     }
     public void FinishRace()
     {
-        if (gameEnded) return;
+        if (gameEnded || !isRunning) return;
         isRunning = false;
         gameEnded = true;
         messageText.text = "Finish! \n Time: " + timer.ToString("F2") + "s";
@@ -56,14 +66,15 @@ public class Timer : MonoBehaviour
         }
         bestTimeText.text = "Best: " + bestTime.ToString("F2") + "s";
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(playerTag)) return ;
-        if (gameObject.CompareTag("Finish"))
+        if (other.CompareTag("Finish"))
         {
             FinishRace();
         }
-        else if (gameObject.CompareTag("OffTrack"))
+        else if (other.CompareTag("OffTrack"))
         {
             GameOver();
         }
