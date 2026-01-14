@@ -1,9 +1,12 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class Timer : MonoBehaviour
 {
     public static Timer instance;
+    public GameObject retryButton;
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI messageText;
     public TextMeshProUGUI bestTimeText;
@@ -20,6 +23,7 @@ public class Timer : MonoBehaviour
     private void Start()
     {
         bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue);
+        retryButton.SetActive(false);
         if (bestTime < float.MaxValue)
             bestTimeText.text = "Best: " + bestTime.ToString("F2") + "s";
         else
@@ -36,7 +40,14 @@ public class Timer : MonoBehaviour
             timer += Time.deltaTime;
             timerText.text = timer.ToString("F2") + "s";
         }
+
+        // ENTER pentru Retry
+        if (gameEnded && Input.GetKeyDown(KeyCode.Return))
+        {
+            RetryGame();
+        }
     }
+
     public void StartRace()
     {
             timer = 0f;
@@ -50,34 +61,21 @@ public class Timer : MonoBehaviour
         isRunning = false;
         gameEnded = true;
         messageText.text = "GAME OVER!";
+
+        if (retryButton != null)
+            retryButton.SetActive(true); // afișăm butonul
     }
-    public void FinishRace()
-    {
-        if (gameEnded || !isRunning) return;
-        isRunning = false;
-        gameEnded = true;
-        messageText.text = "Finish! \n Time: " + timer.ToString("F2") + "s";
-        if (timer < bestTime)
-        {
-            bestTime = timer;
-            PlayerPrefs.SetFloat("Best Time", bestTime);
-            PlayerPrefs.Save();
-            messageText.text += "\n NEW BEST TIME!";
+    public void FinishRace() 
+    { if (gameEnded || !isRunning) return; 
+      isRunning = false;
+      gameEnded = true;
+      messageText.text = "Finish! \n Time: " + timer.ToString("F2") + "s";
+      if (timer < bestTime) 
+        { bestTime = timer;
+          PlayerPrefs.SetFloat("BestTime", bestTime);
+          PlayerPrefs.Save(); messageText.text += "\n NEW BEST TIME!";
         }
         bestTimeText.text = "Best: " + bestTime.ToString("F2") + "s";
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag(playerTag)) return ;
-        if (other.CompareTag("Finish"))
-        {
-            FinishRace();
-        }
-        else if (other.CompareTag("OffTrack"))
-        {
-            GameOver();
-        }
     }
     public void SubtractTime(float amount)
     {
@@ -92,5 +90,9 @@ public class Timer : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         messageText.text = oldMessage;
     }
-
+    public void RetryGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
