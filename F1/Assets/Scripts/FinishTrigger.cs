@@ -4,11 +4,10 @@ public class FinishTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collider detectat: " + other.name);
 
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player a intrat pe Finish!");
+            Debug.Log("Player a ajuns la finish Finish!");
             if (Timer.instance != null)
                 Timer.instance.FinishRace();
         }

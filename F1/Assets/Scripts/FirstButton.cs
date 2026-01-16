@@ -19,6 +19,8 @@ public class FirstButton : MonoBehaviour
 
         if (startButton != null)
             startButton.SetActive(false);
+        if (Timer.instance != null)
+            Timer.instance.StartRace();
 
         Debug.Log("Jocul a început!");
     }

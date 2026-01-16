@@ -22,13 +22,16 @@ public class Timer : MonoBehaviour
     }
     private void Start()
     {
+       
         bestTime = PlayerPrefs.GetFloat("BestTime", float.MaxValue);
         retryButton.SetActive(false);
+
         if (bestTime < float.MaxValue)
             bestTimeText.text = "Best: " + bestTime.ToString("F2") + "s";
         else
             bestTimeText.text = "Best: --";
     }
+
 
     private void Update()
     {
@@ -41,7 +44,6 @@ public class Timer : MonoBehaviour
             timerText.text = timer.ToString("F2") + "s";
         }
 
-        // ENTER pentru Retry
         if (gameEnded && Input.GetKeyDown(KeyCode.Return))
         {
             RetryGame();
@@ -63,7 +65,7 @@ public class Timer : MonoBehaviour
         messageText.text = "GAME OVER!";
 
         if (retryButton != null)
-            retryButton.SetActive(true); // afișăm butonul
+            retryButton.SetActive(true);
     }
     public void FinishRace() 
     { if (gameEnded || !isRunning) return; 
@@ -73,7 +75,8 @@ public class Timer : MonoBehaviour
       if (timer < bestTime) 
         { bestTime = timer;
           PlayerPrefs.SetFloat("BestTime", bestTime);
-          PlayerPrefs.Save(); messageText.text += "\n NEW BEST TIME!";
+          PlayerPrefs.Save(); 
+          messageText.text += "\n NEW BEST TIME!";
         }
         bestTimeText.text = "Best: " + bestTime.ToString("F2") + "s";
     }
