@@ -93,6 +93,30 @@ public class Timer : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         messageText.text = oldMessage;
     }
+
+    public void ActivateSlowTime(float factor, float duration)
+    {
+        StartCoroutine(SlowTimeRoutine(factor, duration));
+    }
+    private System.Collections.IEnumerator SlowTimeRoutine(float factor, float duration)
+    {
+        // Scădem viteza timpului
+        Time.timeScale = factor;
+        // Ajustăm fixedDeltaTime pentru ca fizica (mișcarea player-ului) să rămână fluidă
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+        // Afișăm un mesaj (opțional)
+        string oldMessage = messageText.text;
+        messageText.text = "SLOW MOTION!";
+
+        // Așteptăm folosind SecondsRealtime pentru că Time.timeScale e acum mic!
+        yield return new WaitForSecondsRealtime(duration);
+
+        // Revenim la normal
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+        messageText.text = oldMessage;
+    }
     public void RetryGame()
     {
         Time.timeScale = 1f;
